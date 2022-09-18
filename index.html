@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <style>
+        body{
+          height:600px;
+                width:600px;
+                background-image:linear-gradient(aquamarine,aqua);
+            background-color: aquamarine;
+        }
+        #btn1,#country_name{
+            /*height:25px;
+            width:60px;*/
+            background-color:lightcyan;
+            /*border-radius: 10% 10% 10% 10%;*/
+        }
+    </style>
+    <script>
+        const url = "https://restcountries.com/v2/all";
+
+let suman = (url) => {
+  fetch(url, {
+    method: "GET",
+  })
+    .then((data) => data.json())
+    .then((response) => {
+      // fetch all the data from the API server and send it to the guvi() function 
+
+     // response.capital; 
+     guvi(response);
+     //suman1(response.capital);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+suman(url);
+
+let guvi = (data) => {
+  //for (let i = 0; i < data.length; i++) {
+    //console.log(data[i].name); 
+    document.getElementById("btn1").onclick = function(){
+    var buttonvalue=document.getElementById('country_name').value;
+    //document.write(buttonvalue);
+    for (let i = 0; i < data.length; i++) {
+    if(data[i].capital===buttonvalue) 
+    {
+      //document.write(data[i].capital);
+      const img=document.createElement("img");
+      img.src=data[i].flags.png;
+      document.body.appendChild(img);
+      suman1(data[i].capital);
+      break;
+    } 
+    }
+    }
+};
+    
+        let suman1=(cap)=>{
+          let c= cap;  
+          fetch("https://api.openweathermap.org/data/2.5/weather?q="+c+"&APPID=2046d85f168c462b46b619cf2331e18b",{
+                method:"GET",
+            })
+                .then((data)=>data.json())
+                .then((response)=>{
+                   //console.log(response);
+                    guvi1(response);
+                })
+                .catch((error)=>{
+                    console.log("Error");
+                });
+        };
+        let guvi1 =(data)=>{
+                  const textnode=document.createTextNode(data.main.temp);
+                  document.body.appendChild(textnode);
+                  const textnode1=document.createTextNode(data.main.temp_min);
+                  document.body.appendChild(textnode1);
+                  const textnode2=document.createTextNode(data.main.temp_max);
+                  document.body.appendChild(textnode2);
+                  const textnode3=document.createTextNode(data.main.pressure);
+                  document.body.appendChild(textnode3);
+        }
+        </script>
+</head>
+<body>
+   <h2 align="center" >Weather Forecast</h2>
+    Enter Capital:<input type="text" id="country_name" ><br><br>
+    <input type="button" id="btn1" value="Get Details" ><br>
+    <div id="demo"></div>
+</body>
+</html>
